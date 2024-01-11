@@ -50,7 +50,7 @@ statement_list: statement
 
 
 statement: add_obj_statement END
-         | light_command END     
+         | light_command END     //команда для управления светом
          | blinds_command END 
          | info_command END
          | set_conditioner END   
@@ -61,7 +61,7 @@ statement: add_obj_statement END
 add_obj_statement: ADD_ROOM STRING { $$ = create_device($2); temp = $$; }
 ;
 
-
+//обновление команд
             
 light_command: object HAVE ACTIVATE_LIGHT LPAREN RPAREN { 
                 enqueue_action(turn_on_light, get_device($1), 0); 
