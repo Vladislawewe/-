@@ -53,7 +53,7 @@ OUTNUMBERS
 HALT                       ; Остановка программы
 
 ; Объявление строк, массивов и констант
-PROMPT .STRINGZ "Введите 5 чисел: "
+PROMPT .STRINGZ "Input 5 numbers ranging from 000 - 100 with 3 digits."
 NUMBERS .BLKW 5           ; Выделение памяти для 5 чисел
 CONSTATEXP .BLKW 5        ; Выделение памяти для 5 символов
 COUNT .FILL #5            ; Количество чисел для ввода
