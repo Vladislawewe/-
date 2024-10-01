@@ -4,7 +4,7 @@
 
 %%
 [0-9]+   { printf("Число: %s\n", yytext); }
-[a-zA-Z]+ { printf("Идентификатор: %s\n", yytext); }
+[a-zA-Z]+ { printf("Текст: %s\n", yytext); }
 %%
 
 int yywrap() {
