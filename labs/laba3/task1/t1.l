@@ -3,15 +3,8 @@
 %}
 
 %%
-[0-9]+   { printf("Число: %s\n", yytext); }
-[a-zA-Z]+ { printf("Текст: %s\n", yytext); }
+[0-9]+  {printf("number/n");}
+[a-zA-Zа-яА-Я]+ {printf("word/n");}
+
 %%
-
-int yywrap() {
-    return 1;
-}
-
-int main() {
-    yylex();
-    return 0;
-}
+int yywrap() {return 1;}
