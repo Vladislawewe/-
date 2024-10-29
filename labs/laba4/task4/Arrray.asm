@@ -1,88 +1,55 @@
-.ORIG x3000
+.ORIG x3000    
 
-LD 	R2, INIT
-LEA 	R1, NUMBERS
+LD  R2, INIT    ; Загружаем начальное значение счетчика в R2 (0)
+LEA  R1, NUMBERS  ; Загружаем адрес массива NUMBERS в R1
 
-LOOP_READ
+LOOP_READ     ; Цикл считывания чисел
 
-	ADD 	R2, R2, #1
-	LEA	R0, STRING
-	PUTS
-	GETC	
-	OUT
+ ADD  R2, R2, #1  ; Увеличиваем счетчик R2 на 1
+ LEA R0, STRING  ; Загружаем адрес строки "Enter a number: " в R0
+ PUTS       ; Выводим строку на консоль
+ GETC       ; Считываем символ с клавиатуры
+ OUT        ; Выводим считанный символ на консоль
 
-	ADD 	R3, R0, #0
-	LD 	R4, NEG48 
-	ADD 	R3, R3, R4
-	STR 	R3, R1, #0
-	ADD 	R1, R1, #1
+ ADD  R3, R0, #0  ; Копируем символ в R3
+ LD  R4, NEG48   ; Загружаем константу -48 в R4 (для конвертации ASCII в число)
+ ADD  R3, R3, R4  ; Преобразуем символ из ASCII в число (вычитаем 48)
+ STR  R3, R1, #0  ; Сохраняем число в массив NUMBERS по адресу R1
+ ADD  R1, R1, #1  ; Увеличиваем адрес в R1 для записи следующего числа
 
-	LEA 	R0, NEWLINE
-	PUTS
+ LEA  R0, NEWLINE  ; Загружаем адрес строки новой строки в R0
+ PUTS       ; Выводим новую строку
 
-	ADD 	R3, R2, #-5
-	BRz 	SORT
-	BRnzp 	LOOP_READ
+ ADD  R3, R2, #-5 ; Проверяем, не достигнут ли лимит ввода (5 чисел)
+ BRz  SORT     ; Если достигнут, переходим к сортировке
+ BRnzp  LOOP_READ ; Иначе продолжаем ввод
 
-SORT
-	LD 	R6, COUNT
-	ADD 	R4, R6, #0
+SORT        ; Алгоритм сортировки (Bubble Sort)
 
-OUTLOOP
+ LD  R6, COUNT   ; Загружаем размер массива (5) в R6
+ ADD  R4, R6, #0  ; Копируем размер в R4
 
-	ADD 	R4, R4, #-1
-	BRz 	OUTPUT_LOOP
-	LEA 	R3, NUMBERS
-	ADD 	R5, R4, #0 
+OUTLOOP       ; Внешний цикл сортировки
 
-INLOOP
+ ADD  R4, R4, #-1  ; Уменьшаем счетчик R4 на 1
+ BRz  OUTPUT_LOOP ; Если R4 равен 0, переходим к выводу отсортированного массива
+ LEA  R3, NUMBERS  ; Загружаем адрес начала массива в R3
+ ADD  R5, R4, #0  ; Копируем счетчик в R5
 
-	LDR 	R0, R3, #0
-	LDR 	R1, R3, #1
-	NOT 	R2, R1
-	ADD 	R2, R2, #1
-	ADD 	R2, R0, R2
-	BRN 	SWAP
-	SKIP_SWAP
-	ADD 	R3, R3, #1
-	ADD 	R5, R5, #-1
-	BRp 	INLOOP
-	BRnzp 	OUTLOOP
+INLOOP       ; Внутренний цикл сортировки
 
-SWAP
+ LDR  R0, R3, #0  ; Загружаем элемент массива по адресу R3 в R0
+ LDR  R1, R3, #1  ; Загружаем следующий элемент массива по адресу R3+1 в R1
+ NOT  R2, R1    ; Инвертируем значение R1 (для сравнения)
+ ADD  R2, R2, #1   ; Дополняем до отрицательного значения
+ ADD  R2, R0, R2  ; Вычисляем разность R0 - R1
+ BRN  SWAP     ; Если разность отрицательная, переходим к обмену
+ SKIP_SWAP     ; Если разность неотрицательная, пропускаем обмен
+ ADD  R3, R3, #1  ; Увеличиваем адрес R3 для следующего элемента массива
+ ADD  R5, R5, #-1  ; Уменьшаем счетчик R5 на 1
+ BRp  INLOOP    ; Если R5 больше 0, переходим к следующему элементу массива
+ BRnzp  OUTLOOP   ; Если R5 равен 0, переходим к следующему шагу внешнего цикла
 
-	STR 	R1, R3, #0 
-	STR 	R0, R3, #1
-	BRnzp 	SKIP_SWAP
+SWAP        ; Обмен элементов массива
 
-OUTPUT_LOOP
-
-	LEA 	R1, NUMBERS
-	LD 	R2, INIT
-
-LOOP_PRINT
-
-	LDR 	R0, R1, #0
-	LD 	R4, POS48
-	ADD 	R0, R0, R4
-	OUT              
-	LEA 	R0, NEWLINE
-	PUTS                 
-	ADD 	R1, R1, #1  
-	ADD 	R2, R2, #1
-	ADD 	R3, R2, #-5
-	BRz 	END
-	BRnzp 	LOOP_PRINT
-
-END
-HALT
-
-INIT .FILL #0
-STRING .STRINGZ "Enter a number: "
-NEWLINE .STRINGZ "\n"
-POS48 .FILL #48
-NEG48 .FILL #-48
-NUMBERS .BLKW #5
-COUNT .FILL #5
-
-.END
+ STR  R1, R3, #0  ; Сохраняем значение R1 в R3
